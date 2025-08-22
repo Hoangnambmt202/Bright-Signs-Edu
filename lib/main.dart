@@ -1,19 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'routes/app_routes.dart';
 
 void main() {
-  runApp(const EduApp());
+  runApp(const ProviderScope(child: MyApp()));
 }
 
-class EduApp extends StatelessWidget {
-  const EduApp({super.key});
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: "Bright Signs",
+      debugShowCheckedModeBanner: false,
+      title: 'Bright Signs',
       theme: ThemeData(primarySwatch: Colors.blue),
-      initialRoute: AppRoutes.splash,
+      initialRoute: AppRoutes.splash, // Mở app vào splash
       routes: AppRoutes.routes,
     );
   }

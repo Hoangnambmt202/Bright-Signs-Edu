@@ -113,6 +113,72 @@ class _StudentSignupScreenState extends State<StudentSignupScreen> {
                 ),
                 child: const Text("Đăng ký", style: TextStyle(color: Colors.white, fontSize: 18)),
               ),
+              const SizedBox(height: 24),
+              Row(
+                children: [
+                  const Expanded(
+                    child: Divider(
+                      thickness: 1,
+                      color: Colors.grey,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Text("Hoặc", style: TextStyle(color: Colors.grey)),
+                  ),
+                  const Expanded(
+                    child: Divider(
+                      thickness: 1,
+                      color: Colors.grey,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
+              // Thay thế Row bằng Column để các nút xếp dọc
+              Column(
+                children: [
+                  SizedBox(
+                    width: double.infinity,
+                    child: OutlinedButton.icon(
+                      style: OutlinedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      onPressed: () {
+                        // TODO: Xử lý đăng nhập bằng Google
+                      },
+                      icon: const Icon(
+                        FontAwesomeIcons.google,
+                        color: Colors.red,
+                      ),
+                      label: const Text("Đăng ký với Google"),
+                    ),
+                  ),
+                  const SizedBox(height: 16), // Khoảng cách giữa hai nút
+                  SizedBox(
+                    width: double.infinity,
+                    child: OutlinedButton.icon(
+                      style: OutlinedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      onPressed: () {
+                        // TODO: Xử lý đăng nhập bằng Facebook
+                      },
+                      icon: const Icon(
+                        FontAwesomeIcons.facebook,
+                        color: Colors.blue,
+                      ),
+                      label: const Text("Đăng ký với Facebook"),
+                    ),
+                  ),
+                ],
+              ),
             ],
           ),
         ),

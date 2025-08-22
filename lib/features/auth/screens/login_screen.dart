@@ -4,7 +4,6 @@ import 'package:edu_support/core/widgets/app_logo.dart';
 import 'package:flutter/material.dart';
 import 'package:edu_support/features/auth/screens/parent_signup_screen.dart';
 import 'package:edu_support/features/auth/screens/student_signup_screen.dart';
-import '../../home//screens/home_screen.dart';
 import '../../../routes/app_routes.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -21,13 +20,21 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _passwordController = TextEditingController();
   bool _obscurePassword = true;
 
-  void _login() {
-    if (_formKey.currentState!.validate()) {
-      // TODO: Gọi API backend login ở đây
-      // tuỳ role -> chuyển sang màn hình Home
-      Navigator.pushReplacementNamed(context, AppRoutes.home);
-    }
+void _login() {
+  if (_formKey.currentState!.validate()) {
+    // TODO: Gọi API backend login ở đây, nhận role từ response
+    
+    if (widget.role == "student") {
+  Navigator.pushReplacementNamed(context, AppRoutes.studentMain);
+} else if (widget.role == "parent") {
+  Navigator.pushReplacementNamed(context, AppRoutes.parentMain);
+} else if (widget.role == "teacher") {
+  Navigator.pushReplacementNamed(context, AppRoutes.teacherMain);
+}
+
   }
+}
+
 
   @override
   Widget build(BuildContext context) {

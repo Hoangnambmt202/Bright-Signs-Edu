@@ -9,8 +9,12 @@ class AppLogo extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children:  [
-        Icon(Icons.school, size: 80, color: iconColor),
-        SizedBox(height: 20),
+        Image.asset(
+          'assets/images/Bright_signs_logo.jpg',
+          width: 100,
+          height: 100,
+        ),
+        SizedBox(height: 8),
         Text(
           "Bright Signs",
           style: TextStyle(fontSize: 38, fontWeight: FontWeight.bold),

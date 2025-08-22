@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+class StudentGrades extends StatelessWidget {
+  const StudentGrades({super.key});
 
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
       body: Center(
-        child: Text("Trang chủ - Danh sách môn học"),
+        child: Text("✅ Student GraStudentGrades", style: TextStyle(fontSize: 22)),
       ),
     );
   }

@@ -68,7 +68,7 @@ void _login() {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               AppLogo(iconColor: isParent ? Colors.deepOrange : Colors.green),
-              const SizedBox(height: 24),
+              const SizedBox(height: 12),
               Text("Vui lòng đăng nhập tài khoản được cấp của bạn"),
               const SizedBox(height: 24),
               TextFormField(

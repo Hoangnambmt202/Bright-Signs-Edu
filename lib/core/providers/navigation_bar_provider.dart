@@ -4,9 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 enum MenuItem {
   home,
   task,
-  add,
-  notifications,
-  profile,
+  grade,
+
 }
 
 /// Provider lưu menu hiện tại (default: home)

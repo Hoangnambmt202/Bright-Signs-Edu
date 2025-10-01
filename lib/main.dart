@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Bright Signs',
       theme: ThemeData(primarySwatch: Colors.blue),
-      initialRoute: AppRoutes.splash, // Mở app vào splash
+      initialRoute: AppRoutes.introSplash, // Mở app vào splash
       routes: AppRoutes.routes,
     );
   }

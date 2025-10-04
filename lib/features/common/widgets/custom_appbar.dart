@@ -20,7 +20,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.centerTitle = false,
     this.onBack,
     this.actions,
-    this.backgroundColor = Colors.blue,
+    this.backgroundColor = Colors.white,
     this.shadow,
   });
 
@@ -49,6 +49,11 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       centerTitle: centerTitle,
       actions: actions,
       elevation: 2,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          bottom: Radius.circular(shadow != null ? 16 : 0),
+        ),
+      ),
       shadowColor: Colors.grey.withOpacity(shadow ?? 0.5),
     );
   }

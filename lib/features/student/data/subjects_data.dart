@@ -37,7 +37,7 @@ final List<Subject> subjects = [
         title: 'Chương 2: Thời kỳ nguyên thủy',
         lectures: [
           Lecture(
-            title: 'Nguồn gốc của loài người',
+            title: 'Bài 4 - Nguồn gốc của loài người',
             videoId: 'Te84FwokGUk',
             thumbnail:
                 'https://phatphapungdung.com/wp-content/uploads/2019/03/nguon-goc-loai-nguoi.jpg',

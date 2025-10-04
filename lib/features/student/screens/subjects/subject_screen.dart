@@ -11,9 +11,9 @@ class SubjectScreen extends StatelessWidget {
     return Scaffold(
       appBar: const CustomAppBar(
         title: "Môn học",
-        titleStyle: TextStyle(fontSize: 24, fontWeight: FontWeight.bold), 
+        titleStyle: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white), 
         showBackButton: false, 
-        backgroundColor: Colors.white, 
+        backgroundColor: Color.fromARGB(255, 40, 184, 223), 
         shadow: 0.1,
         actions: [
           IconButton(icon: Icon(Icons.search), onPressed: null),

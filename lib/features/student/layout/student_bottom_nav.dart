@@ -15,7 +15,7 @@ class StudentBottomNav extends ConsumerWidget {
       onTap: (i) => ref.read(studentNavIndexProvider.notifier).state = i,
       items: const [
         NavigationItem(icon: Icons.home),
-        NavigationItem(icon: Icons.book),
+        NavigationItem(icon: Icons.menu_book),
         NavigationItem(icon: Icons.assignment),
         NavigationItem(icon: Icons.grade),
       ],

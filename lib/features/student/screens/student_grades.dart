@@ -1,3 +1,4 @@
+import 'package:edu_support/features/common/widgets/custom_appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 
@@ -34,7 +35,15 @@ class _StudentGradesState extends State<StudentGrades> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-    
+    appBar: const CustomAppBar(
+        title: "Thành tích học tập",
+        titleStyle: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
+        centerTitle: true,
+        backgroundColor: Color.fromARGB(255, 40, 184, 223),
+        showBackButton: false,
+        shadow: 0.1,
+       
+      ),
       body: Column(
         children: [
           // Tab chọn chế độ xem

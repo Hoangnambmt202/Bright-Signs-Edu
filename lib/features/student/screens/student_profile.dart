@@ -1,3 +1,4 @@
+import 'package:edu_support/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 
 class StudentProfile extends StatelessWidget {
@@ -7,7 +8,6 @@ class StudentProfile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-  
         elevation: 1,
         backgroundColor: Colors.white,
         foregroundColor: Colors.black,
@@ -24,7 +24,14 @@ class StudentProfile extends StatelessWidget {
             // Ảnh đại diện + tên
             const CircleAvatar(
               radius: 50,
-              backgroundImage: AssetImage("assets/images/user-avatar-default.jpg"),
+              backgroundColor: Color.fromARGB(255, 40, 184, 223),
+              child: (CircleAvatar(
+                radius: 48,
+                backgroundColor: Colors.white,
+                backgroundImage: AssetImage(
+                  "assets/images/user-avatar-default.jpg",
+                ),
+              )),
             ),
             const SizedBox(height: 12),
             const Text(
@@ -35,6 +42,13 @@ class StudentProfile extends StatelessWidget {
 
             // Thông tin cá nhân
             Card(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+                side: const BorderSide(
+                  color: Color.fromARGB(255, 40, 184, 223), // 👈 màu viền
+                  width: 1.5, // 👈 độ dày viền
+                ),
+              ),
               child: Column(
                 children: const [
                   ListTile(
@@ -69,6 +83,13 @@ class StudentProfile extends StatelessWidget {
 
             // Thông tin học tập
             Card(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+                side: const BorderSide(
+                  color: Color.fromARGB(255, 40, 184, 223), // 👈 màu viền
+                  width: 1.5, // 👈 độ dày viền
+                ),
+              ),
               child: Column(
                 children: const [
                   ListTile(
@@ -105,7 +126,13 @@ class StudentProfile extends StatelessWidget {
             ),
             const SizedBox(height: 10),
             TextButton.icon(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.pushReplacementNamed(
+                  context,
+                  AppRoutes.login,
+                  arguments: "student",
+                );
+              },
               icon: const Icon(Icons.logout, color: Colors.red),
               label: const Text(
                 "Đăng xuất",

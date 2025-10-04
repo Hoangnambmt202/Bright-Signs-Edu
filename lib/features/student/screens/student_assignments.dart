@@ -1,3 +1,4 @@
+import 'package:edu_support/features/common/widgets/custom_appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:edu_support/features/student/screens/student_assignment_detail.dart';
 
@@ -39,6 +40,19 @@ class _StudentAssignmentsState extends State<StudentAssignments> {
         : _assignments.where((a) => a["subject"] == _filter).toList();
 
     return Scaffold(
+      appBar: const CustomAppBar(
+        title: "Bài tập",
+        titleStyle: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white), 
+        showBackButton: false, 
+        backgroundColor: Color.fromARGB(255, 40, 184, 223),
+        shadow: 0.1,
+        actions: [
+          IconButton(icon: Icon(Icons.search), onPressed: null),
+          IconButton(icon: Icon(Icons.filter_list), onPressed: null),
+          IconButton(icon: Icon(Icons.question_mark_sharp), onPressed: null),
+  
+        ],
+        ),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(

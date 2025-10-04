@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:edu_support/features/common/widgets/custom_appbar.dart';
 import 'package:edu_support/features/student/models/subject.dart';
-import '../student_lectures.dart';
+import 'student_lectures.dart';
 
 class LectureListScreen extends StatelessWidget {
   final Subject subject;
@@ -21,8 +21,9 @@ class LectureListScreen extends StatelessWidget {
         titleStyle: const TextStyle(
           fontSize: 18,
         ),
+        
         showBackButton: true,
-        backgroundColor: Colors.white,
+        backgroundColor: Color.fromARGB(255, 40, 184, 223),
         shadow: 0.1,
       ),
       backgroundColor: const Color(0xFFF5F6FA),
@@ -32,11 +33,13 @@ class LectureListScreen extends StatelessWidget {
         itemBuilder: (context, index) {
           final lecture = chapter.lectures[index];
           return Card(
+            color: Colors.white,
             margin: const EdgeInsets.only(bottom: 12),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
             ),
             child: ListTile(
+              tileColor: const Color(0xFFF5F6FA),
               leading: SizedBox(
                 width: 100,
                 child: ClipRRect(
@@ -64,8 +67,10 @@ class LectureListScreen extends StatelessWidget {
                   MaterialPageRoute(
                     builder: (_) => LecturePlayerScreen(
                       title: lecture.title,
-                      videoId: lecture.videoId,
-                      signVideoId: lecture.signVideoId ?? "",
+                      // videoId: lecture.videoId,          // Nếu có thì dùng YouTube
+                     mp4Url:"assets/videos/bai-4-nguon-goc-loai-nguoi-LS-6.mp4", // Nếu không có thì dùng video mp4
+                      signVideoId: "i7kGLIXmjPA",
+                      // signVideoId: lecture.signVideoId ?? "",
                     ),
                   ),
                 );

@@ -2,17 +2,20 @@ import 'package:flutter/material.dart';
 
 class Lecture {
   final String title;
-  final String videoId;
-  final String thumbnail;
+  final String videoId;       // YouTube videoId, có thì dùng
+  final String? mp4Url;       // Nếu videoId rỗng thì lấy mp4Url
   final String? signVideoId;
+  final String thumbnail;
 
   Lecture({
     required this.title,
     required this.videoId,
     required this.thumbnail,
     this.signVideoId,
+    this.mp4Url,
   });
 }
+
 
 class Chapter {
   final String title;

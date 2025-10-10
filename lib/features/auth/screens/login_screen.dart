@@ -44,7 +44,7 @@ void _login() {
       appBar: AppBar(
         title: Text("Đăng nhập"),
         titleTextStyle: const TextStyle(
-          fontSize: 24,
+          fontSize: 18,
           fontWeight: FontWeight.bold,
           color: Colors.black,
         ),
@@ -60,8 +60,8 @@ void _login() {
           ),
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(24.0),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(18.0),
         child: Form(
           key: _formKey,
           child: Column(

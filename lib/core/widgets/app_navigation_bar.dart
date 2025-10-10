@@ -4,13 +4,7 @@ class AppNavigationBar extends StatefulWidget {
   final int selectedIndex;
   final List<NavigationItem> items;
   final Function(int) onTap;
-  final Color backgroundColor;
-  final Color activeColor;
-  final Color inactiveColor;
-  final Color indicatorColor;
   final double height;
-  final double borderRadius;
-  final EdgeInsets margin;
   final Duration animationDuration;
 
   const AppNavigationBar({
@@ -18,164 +12,91 @@ class AppNavigationBar extends StatefulWidget {
     required this.selectedIndex,
     required this.items,
     required this.onTap,
-    this.backgroundColor = const Color.fromARGB(255, 40, 184, 223),
-    this.activeColor = const Color.fromARGB(255, 40, 184, 223),
-    // this.inactiveColor = const Color.fromARGB(255, 95, 95, 95),
-    this.inactiveColor =  Colors.white,
-    this.indicatorColor = const Color.fromARGB(255, 246, 246, 248),
-    this.height = 65,
-    this.borderRadius = 32.5,
-    this.margin = const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+    this.height = 70,
     this.animationDuration = const Duration(milliseconds: 300),
   });
 
   @override
-  State<AppNavigationBar> createState() => _CustomRoundedNavigationBarState();
+  State<AppNavigationBar> createState() => _AppNavigationBarState();
 }
 
-class _CustomRoundedNavigationBarState extends State<AppNavigationBar>
-    with TickerProviderStateMixin {
-  late AnimationController _animationController;
-  late Animation<double> _indicatorAnimation;
-
-  @override
-  void initState() {
-    super.initState();
-    _animationController = AnimationController(
-      duration: widget.animationDuration,
-      vsync: this,
-    );
-    _indicatorAnimation = Tween<double>(
-      begin: 0,
-      end: 1,
-    ).animate(CurvedAnimation(
-      parent: _animationController,
-      curve: Curves.easeInOutCubic,
-    ));
-  }
-
-  @override
-  void didUpdateWidget(AppNavigationBar oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (widget.selectedIndex != oldWidget.selectedIndex) {
-      _animationController.forward(from: 0);
-    }
-  }
-
-  @override
-  void dispose() {
-    _animationController.dispose();
-    super.dispose();
-  }
-
+class _AppNavigationBarState extends State<AppNavigationBar>
+    with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: widget.margin,
-      height: widget.height,
-      decoration: BoxDecoration(
-        color: widget.backgroundColor,
-        borderRadius: BorderRadius.circular(widget.borderRadius),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.15),
-            blurRadius: 20,
-            offset: const Offset(0, 5),
+    final activeColor = const Color(0xFF2EC4B6); // Xanh mint modern
+    final inactiveColor = Colors.grey[500];
+
+    return SafeArea(
+      child: Container(
+        width: double.infinity, // 🔥 Tràn toàn màn hình
+        height: widget.height,
+
+        // 🔥 Thêm decoration có viền trên
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          border: Border(
+            top: BorderSide(color: Colors.grey, width: 0.3),
           ),
-          BoxShadow(
-            color: widget.indicatorColor.withOpacity(0.1),
-            blurRadius: 15,
-            offset: const Offset(0, 0),
-          ),
-        ],
-      ),
-      child: Stack(
-        children: [
-          // Animated indicator
-          AnimatedBuilder(
-            animation: _indicatorAnimation,
-            builder: (context, child) {
-              return AnimatedPositioned(
+        ),
+
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: widget.items.asMap().entries.map((entry) {
+            final index = entry.key;
+            final item = entry.value;
+            final isSelected = index == widget.selectedIndex;
+
+            return GestureDetector(
+              onTap: () => widget.onTap(index),
+              child: AnimatedContainer(
                 duration: widget.animationDuration,
-                curve: Curves.easeInOutCubic,
-                left: _getIndicatorPosition(),
-                top: 8,
-                child: Container(
-                  width: _getItemWidth() - 16,
-                  height: widget.height - 16,
-                  decoration: BoxDecoration(
-                    color: widget.indicatorColor,
-                    borderRadius: BorderRadius.circular(widget.borderRadius - 8),
-                  ),
-                ),
-              );
-            },
-          ),
-          // Navigation items
-          Row(
-            children: widget.items.asMap().entries.map((entry) {
-              final index = entry.key;
-              final item = entry.value;
-              final isSelected = index == widget.selectedIndex;
-              
-              return Expanded(
-                child: GestureDetector(
-                  onTap: () => widget.onTap(index),
-                  child: Container(
-                    height: widget.height,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(widget.borderRadius),
+                curve: Curves.easeInOut,
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                color: isSelected
+                    ? activeColor.withOpacity(0.1)
+                    : Colors.transparent,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    AnimatedScale(
+                      scale: isSelected ? 1.2 : 1.0,
+                      duration: widget.animationDuration,
+                      child: Icon(
+                        item.icon,
+                        color: isSelected ? activeColor : inactiveColor,
+                        size: 21,
+                      ),
                     ),
-                    child: AnimatedBuilder(
-                      animation: _animationController,
-                      builder: (context, child) {
-                        return Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            AnimatedScale(
-                              scale: isSelected ? 1.2 : 1.0,
-                              duration: widget.animationDuration,
-                              curve: Curves.easeInOutCubic,
-                              child: Icon(
-                                item.icon,
-                                color: isSelected ? widget.activeColor : widget.inactiveColor,
-                                size: 24,
-                              ),
-                            ),
-                            const SizedBox(height: 4),
-                            if (item.label != null)
-                              AnimatedOpacity(
-                                opacity: isSelected ? 1.0 : 0.0,
-                                duration: widget.animationDuration,
-                                child: Text(
-                                  item.label!,
-                                  style: TextStyle(
-                                    color: widget.activeColor,
-                                    fontSize: 10,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                              ),
-                          ],
-                        );
-                      },
+                    const SizedBox(height: 2),
+                    AnimatedOpacity(
+                      opacity: isSelected ? 1 : 0,
+                      duration: widget.animationDuration,
+                      child: Text(
+                        item.label ?? "",
+                        style: TextStyle(
+                          color: activeColor,
+                          fontSize: 11,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
                     ),
-                  ),
+                    AnimatedContainer(
+                      duration: widget.animationDuration,
+                      margin: const EdgeInsets.only(top: 4),
+                      height: 3,
+                      width: isSelected ? 14 : 0,
+                      color: activeColor,
+                    ),
+                  ],
                 ),
-              );
-            }).toList(),
-          ),
-        ],
+              ),
+            );
+          }).toList(),
+        ),
       ),
     );
-  }
-
-  double _getItemWidth() {
-    return (MediaQuery.of(context).size.width - widget.margin.horizontal) / widget.items.length;
-  }
-
-  double _getIndicatorPosition() {
-    return (widget.selectedIndex * _getItemWidth()) + 8;
   }
 }
 

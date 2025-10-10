@@ -166,7 +166,7 @@ class _AppLogoState extends State<AppLogo> with TickerProviderStateMixin {
                   child: const Text(
                     "Bright Signs",
                     style: TextStyle(
-                      fontSize: 42,
+                      fontSize: 32,
                       fontWeight: FontWeight.bold,
                       letterSpacing: 2.0,
                       color: Colors.black,

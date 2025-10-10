@@ -37,7 +37,7 @@ class _StudentGradesState extends State<StudentGrades> {
     return Scaffold(
     appBar: const CustomAppBar(
         title: "Thành tích học tập",
-        titleStyle: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
+        titleStyle: TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: Colors.white),
         centerTitle: true,
         backgroundColor: Color.fromARGB(255, 40, 184, 223),
         showBackButton: false,

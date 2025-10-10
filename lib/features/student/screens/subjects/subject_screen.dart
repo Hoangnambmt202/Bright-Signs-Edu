@@ -11,7 +11,7 @@ class SubjectScreen extends StatelessWidget {
     return Scaffold(
       appBar: const CustomAppBar(
         title: "Môn học",
-        titleStyle: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white), 
+        titleStyle: TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: Colors.white), 
         showBackButton: false, 
         backgroundColor: Color.fromARGB(255, 40, 184, 223), 
         shadow: 0.1,
@@ -46,9 +46,9 @@ class SubjectScreen extends StatelessWidget {
             child: Column(
               children: [
                 CircleAvatar(
-                  radius: 32,
+                  radius: 28,
                   backgroundColor: Colors.white,
-                  child: Icon(subject.icon, size: 40, color: Colors.blueAccent),
+                  child: Icon(subject.icon, size: 36, color: Colors.blueAccent),
                 ),
                 const SizedBox(height: 8),
                 Text(

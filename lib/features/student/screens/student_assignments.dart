@@ -42,7 +42,7 @@ class _StudentAssignmentsState extends State<StudentAssignments> {
     return Scaffold(
       appBar: const CustomAppBar(
         title: "Bài tập",
-        titleStyle: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white), 
+        titleStyle: TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: Colors.white), 
         showBackButton: false, 
         backgroundColor: Color.fromARGB(255, 40, 184, 223),
         shadow: 0.1,

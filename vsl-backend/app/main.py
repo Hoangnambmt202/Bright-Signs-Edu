@@ -6,6 +6,7 @@ from pydantic import BaseModel
 from sqlalchemy.orm import Session
 from app.models.user import User
 from app.routers import auth
+from app.routers import user
 
 # Tạo bảng database nếu chưa có
 Base.metadata.create_all(bind=engine)
@@ -25,6 +26,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 app.include_router(auth.router, prefix="/auth", tags=["auth"])
+app.include_router(user.router, prefix="/users", tags=["users"])    
 
 if __name__ == "__main__":
     uvicorn.run("app.main:app", host="127.0.0.1", port=8000, reload=True)

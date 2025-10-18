@@ -1,11 +1,12 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
-from datetime import timedelta
+from fastapi import HTTPException
 
 from app.core.database import get_db
 from app.models.user import User
+from app.schemas.token import Token, RefreshTokenRequest
 from app.schemas.user import UserCreate,UserLogin, UserResponse
-from app.core.security import hash_password, verify_password, create_access_token
+from app.core.security import hash_password, verify_password, create_access_token, create_refresh_token, decode_access_token
 from app.schemas.response import BaseResponse
 
 router = APIRouter()
@@ -22,7 +23,7 @@ def register(user: UserCreate, db: Session = Depends(get_db)):
         )
 
     hashed_pw = hash_password(user.password)
-    new_user = User(email=user.email, name=user.name, password=hashed_pw)
+    new_user = User(email=user.email, name=user.name, password=hashed_pw, role=user.role)
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
@@ -42,10 +43,27 @@ def login(data: UserLogin, db: Session = Depends(get_db)):
     if not verify_password(data.password, user.password):
         return BaseResponse(status="error", message="Sai mật khẩu")
 
-    token = create_access_token({"sub": user.email})
+    access_token = create_access_token({"sub": user.email})
+    refresh_token = create_refresh_token(data={"sub": user.email})
     return BaseResponse(
         status="success",
         message="Đăng nhập thành công",
-        data={"access_token": token, "token_type": "bearer"}
+        data={"access_token": access_token, "refresh_token": refresh_token, "token_type": "bearer"}
     )
+# =====================
+# REFRESH TOKEN
+# =====================
+@router.post("/refresh", response_model=Token)
+def refresh_token(payload: RefreshTokenRequest):
+    refresh_token = payload.refresh_token
+    data = decode_access_token(refresh_token)
+    if data.get("type") != "refresh":
+        raise HTTPException(status_code=401, detail="Invalid refresh token")
 
+    user_email = data.get("sub")
+    if not user_email:
+        raise HTTPException(status_code=401, detail="Invalid token")
+
+    access_token = create_access_token(data={"sub": user_email})
+    new_refresh_token = create_refresh_token(data={"sub": user_email})
+    return {"access_token": access_token, "refresh_token": new_refresh_token, "token_type": "bearer"}

@@ -1,6 +1,7 @@
 {
     "cSpell.words": [
         "autoflush",
+        "joinedload",
         "sessionmaker",
         "uvicorn"
     ]

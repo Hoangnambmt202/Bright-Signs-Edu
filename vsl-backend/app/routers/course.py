@@ -1,5 +1,5 @@
 # app/api/course_router.py
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
 from sqlalchemy.orm import joinedload
 from app.core.database import get_db
@@ -26,11 +26,47 @@ def create_course(
 
 # ----- Danh sách khoá học -----
 @router.get("/", response_model=BaseResponse)
-def list_courses(db: Session = Depends(get_db)):
-    courses = db.query(Course).options(joinedload(Course.teacher)).all()
+def list_courses(
+    page: int = Query(1, ge=1),
+    limit: int = Query(10, ge=1, le=100),
+    db: Session = Depends(get_db)
+    
+    ):
+     # Tổng số khóa học
+    total = db.query(Course).count()
+    # Lấy danh sách khóa học có phân trang
+    courses = (
+        db.query(Course)
+        .options(joinedload(Course.teacher))  # Lấy luôn thông tin giáo viên
+        .order_by(Course.created_at.desc())
+        .offset((page - 1) * limit)
+        .limit(limit)
+        .all()
+    )
     if not courses:
         return BaseResponse(status="error", message="Chưa có khoá học nào")
-    return BaseResponse(status="success", message="Danh sách khoá học", data=[CourseResponse.model_validate(c) for c in courses])
+    
+    course_list = [
+        {
+            "id": c.id,
+            "title": c.title,
+            "description": c.description,
+            "teacher": {
+                "id": c.teacher.id if c.teacher else None,
+                "name": c.teacher.name if c.teacher else None,
+                "email": c.teacher.email if c.teacher else None,
+            },
+            "created_at": c.created_at
+        }
+        for c in courses
+    ]
+    return BaseResponse(status="success", message=f"Danh sách khoá học (trang {page})", data={
+            "total": total,
+            "page": page,
+            "limit": limit,
+            "total_pages": (total + limit - 1) // limit,
+            "courses": course_list
+        })
 
 # ----- Chi tiết khoá học -----
 @router.get("/{course_id}", response_model=BaseResponse)

@@ -23,3 +23,7 @@ class User(Base):
 
     courses = relationship("Course", back_populates="teacher")
     enrollments = relationship("Enrollment", back_populates="student", cascade="all, delete-orphan")
+    progresses = relationship("Progress", back_populates="student", cascade="all, delete-orphan")
+    student_answers = relationship("StudentAnswer", back_populates="student", cascade="all, delete-orphan")
+    quiz_results = relationship("QuizResult", back_populates="student", cascade="all, delete-orphan")
+    

@@ -2,7 +2,7 @@ import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.core.database import Base, engine
-from app.routers import auth, user, course, enrollment, chapter, lesson, quiz
+from app.routers import auth, user, course, enrollment, chapter, lesson, quiz, student_answer, progress
 
 
 
@@ -30,6 +30,8 @@ app.include_router(enrollment.router, prefix="/enroll", tags=["enrollments"])
 app.include_router(chapter.router, prefix="/chapters", tags=["chapters"])
 app.include_router(lesson.router, prefix="/lessons", tags=["lessons"])
 app.include_router(quiz.router, prefix="/quizzes", tags=["quizzes"])
+app.include_router(student_answer.router, prefix="/answers", tags=["student_answers"])
+app.include_router(progress.router, prefix="/progress", tags=["progress_tracking"])
 
 if __name__ == "__main__":
     uvicorn.run("app.main:app", host="127.0.0.1", port=8000, reload=True)

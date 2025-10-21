@@ -15,3 +15,4 @@ class Chapter(Base):
 
     # Quan hệ với Course
     course = relationship("Course", back_populates="chapters")
+    lessons = relationship("Lesson", back_populates="chapter", cascade="all, delete")

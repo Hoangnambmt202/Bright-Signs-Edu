@@ -15,4 +15,6 @@ class Lesson(Base):
 
     chapter = relationship("Chapter", back_populates="lessons")
     quizzes = relationship("Quiz", back_populates="lesson")
+    progresses = relationship("Progress", back_populates="lesson", cascade="all, delete-orphan")
+
 

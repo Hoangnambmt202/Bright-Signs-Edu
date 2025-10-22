@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'routes/app_routes.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized(); // ✅ Bắt buộc khi dùng async trong main
+  await dotenv.load(fileName: ".env"); // ✅ Load biến môi trường trước khi khởi tạo provider
 
-void main() {
   runApp(const ProviderScope(child: MyApp()));
 }
-
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 

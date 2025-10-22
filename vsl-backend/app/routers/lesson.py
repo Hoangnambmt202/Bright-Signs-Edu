@@ -9,7 +9,7 @@ from app.models.user import User
 from app.core.security import require_role
 import shutil, os
 
-router = APIRouter(prefix="/lessons", tags=["Lessons"])
+router = APIRouter()
 
 UPLOAD_DIR = "uploads/lessons"
 os.makedirs(UPLOAD_DIR, exist_ok=True)

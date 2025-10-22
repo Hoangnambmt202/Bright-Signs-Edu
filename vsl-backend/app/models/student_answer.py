@@ -9,14 +9,18 @@ class StudentAnswer(Base):
     student_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     quiz_id = Column(Integer, ForeignKey("quizzes.id"), nullable=False)
     question_id = Column(Integer, ForeignKey("questions.id"), nullable=False)
+    quiz_result_id = Column(Integer, ForeignKey("quiz_results.id"), nullable=True)  # 🔑 thêm dòng này
+
     selected_answer = Column(String(1), nullable=False)
-    is_correct = Column(Integer, default=0)  # 1: đúng, 0: sai
+    is_correct = Column(Integer, default=0)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
+    # relationships
     student = relationship("User", back_populates="student_answers")
     quiz = relationship("Quiz", back_populates="student_answers")
+    quiz_result = relationship("QuizResult", back_populates="student_answers")  
     
-
+    
 class QuizResult(Base):
     __tablename__ = "quiz_results"
 
@@ -30,5 +34,7 @@ class QuizResult(Base):
 
     student = relationship("User", back_populates="quiz_results")
     quiz = relationship("Quiz", back_populates="quiz_results")
-    student_answers = relationship("StudentAnswer", backref="quiz_result", cascade="all, delete-orphan")
+
+    # 🔗 thêm quan hệ với StudentAnswer
+    student_answers = relationship("StudentAnswer", back_populates="quiz_result", cascade="all, delete-orphan")
 

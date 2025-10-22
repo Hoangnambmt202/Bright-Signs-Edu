@@ -1,55 +1,92 @@
+
+import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+
+import 'package:Bright_Signs/routes/app_routes.dart';
 import 'package:Bright_Signs/core/widgets/app_logo.dart';
+import 'package:Bright_Signs/features/auth/providers/auth_provider.dart';
 import 'package:Bright_Signs/features/auth/screens/parent_signup_screen.dart';
 import 'package:Bright_Signs/features/auth/screens/student_signup_screen.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:flutter/material.dart';
-import '../../../routes/app_routes.dart';
 
-class LoginScreen extends StatefulWidget {
+class LoginScreen extends ConsumerStatefulWidget {
   final String role; // "parent" hoặc "student"
   const LoginScreen({super.key, required this.role});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  ConsumerState<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _LoginScreenState extends ConsumerState<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _obscurePassword = true;
-  bool _isLoading = false; // ✅ Thêm biến loading
 
+  //login function
   Future<void> _login() async {
-    if (!_formKey.currentState!.validate()) return;
+  if (!_formKey.currentState!.validate()) return;
 
-    setState(() => _isLoading = true);
+  final email = _emailController.text.trim();
+  final password = _passwordController.text.trim();
 
-    try {
-      // ⚙️ Giả lập API call (delay 2s)
-      await Future.delayed(const Duration(seconds: 2));
+  // 🟡 Thông báo đang đăng nhập
+  ScaffoldMessenger.of(context).showSnackBar(
+    const SnackBar(content: Text("Đang đăng nhập...")),
+  );
 
-      // TODO: Gọi API login thật tại đây và lấy role từ response
+  try {
+    await ref.read(authControllerProvider.notifier).login(email, password);
+    final state = ref.read(authControllerProvider);
 
-      if (widget.role == "student") {
+    if (state is AsyncData) {
+      final data = state.value;
+      final role = data?['data']?['user']?['role'] ?? widget.role;
+
+      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Đăng nhập thành công!"), backgroundColor: Colors.green,),
+      );
+
+      if (role == 'student') {
         Navigator.pushReplacementNamed(context, AppRoutes.studentMain);
-      } else if (widget.role == "parent") {
+      } else if (role == 'parent') {
         Navigator.pushReplacementNamed(context, AppRoutes.parentMain);
-      } else if (widget.role == "teacher") {
+      } else if (role == 'teacher') {
         Navigator.pushReplacementNamed(context, AppRoutes.teacherMain);
       }
-    } catch (e) {
-      // ⚠️ Hiển thị lỗi nếu cần
+    } else if (state is AsyncError) {
+      // 🟥 Hiển thị lỗi rõ ràng
+      ScaffoldMessenger.of(context).hideCurrentSnackBar();
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Đăng nhập thất bại: $e")),
+        SnackBar(
+          content: Text(
+            "Đăng nhập thất bại: ${state.error.toString()}",
+            style: const TextStyle(color: Colors.white),
+          ),
+          backgroundColor: Colors.red,
+        ),
       );
-    } finally {
-      setState(() => _isLoading = false);
     }
+  } catch (e) {
+    // 🟥 Bắt lỗi bất ngờ (network, JSON, ... )
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text("Đăng nhập thất bại: ${e.toString()}"),
+        backgroundColor: Colors.red,
+      ),
+    );
   }
+}
+
+  
 
   @override
   Widget build(BuildContext context) {
+    final authState = ref.watch(authControllerProvider);
+    final isLoading = authState is AsyncLoading;
     final isParent = widget.role == "parent";
 
     return Scaffold(
@@ -85,16 +122,17 @@ class _LoginScreenState extends State<LoginScreen> {
 
               // Username
               TextFormField(
-                controller: _usernameController,
+                controller: _emailController,
                 decoration: InputDecoration(
-                  labelText: isParent ? "Email phụ huynh" : "Mã học sinh",
+                  labelText: isParent ? "Email phụ huynh" : "Email học sinh",
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
                   prefixIcon: const Icon(Icons.account_circle),
                 ),
-                validator: (value) =>
-                    (value == null || value.isEmpty) ? "Vui lòng nhập thông tin" : null,
+                validator: (value) => (value == null || value.isEmpty)
+                    ? "Vui lòng nhập thông tin"
+                    : null,
               ),
               const SizedBox(height: 16),
 
@@ -119,8 +157,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     },
                   ),
                 ),
-                validator: (value) =>
-                    (value == null || value.isEmpty) ? "Vui lòng nhập mật khẩu" : null,
+                validator: (value) => (value == null || value.isEmpty)
+                    ? "Vui lòng nhập mật khẩu"
+                    : null,
               ),
 
               const SizedBox(height: 24),
@@ -129,13 +168,17 @@ class _LoginScreenState extends State<LoginScreen> {
                 height: 50,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: isParent ? Colors.deepOrange : Colors.green,
+                    backgroundColor: isParent
+                        ? Colors.deepOrange
+                        : Colors.green,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
                   ),
-                  onPressed: _isLoading ? null : _login, // 🔒 Disable khi loading
-                  child: _isLoading
+                  onPressed: isLoading
+                      ? null
+                      : _login, // 🔒 Disable khi loading
+                  child: isLoading
                       ? const SizedBox(
                           height: 24,
                           width: 24,
@@ -153,7 +196,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
               const SizedBox(height: 16),
               TextButton(
-                onPressed: _isLoading ? null : () {}, // Disable nếu đang load
+                onPressed: isLoading ? null : () {}, // Disable nếu đang load
                 child: const Text("Quên mật khẩu?"),
               ),
 
@@ -175,11 +218,17 @@ class _LoginScreenState extends State<LoginScreen> {
               Column(
                 children: [
                   OutlinedButton.icon(
-                    onPressed: _isLoading ? null : () {},
-                    icon: const Icon(FontAwesomeIcons.google, color: Colors.red),
+                    onPressed: isLoading ? null : () {},
+                    icon: const Icon(
+                      FontAwesomeIcons.google,
+                      color: Colors.red,
+                    ),
                     label: const Text("Đăng nhập với Google"),
                     style: OutlinedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(horizontal: 12 , vertical: 12),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 12,
+                      ),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
@@ -187,11 +236,17 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   const SizedBox(height: 16),
                   OutlinedButton.icon(
-                    onPressed: _isLoading ? null : () {},
-                    icon: const Icon(FontAwesomeIcons.facebook, color: Colors.blue),
+                    onPressed: isLoading ? null : () {},
+                    icon: const Icon(
+                      FontAwesomeIcons.facebook,
+                      color: Colors.blue,
+                    ),
                     label: const Text("Đăng nhập với Facebook"),
                     style: OutlinedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric( horizontal: 12,  vertical: 12),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 12,
+                      ),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
@@ -201,7 +256,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               const SizedBox(height: 24),
               TextButton(
-                onPressed: _isLoading
+                onPressed: isLoading
                     ? null
                     : () {
                         if (widget.role == "parent") {

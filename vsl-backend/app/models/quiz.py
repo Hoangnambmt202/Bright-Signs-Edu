@@ -13,6 +13,11 @@ class Quiz(Base):
 
     lesson = relationship("Lesson", back_populates="quizzes")
     questions = relationship("Question", back_populates="quiz", cascade="all, delete")
+    student_answers = relationship("StudentAnswer", back_populates="quiz")
+    quiz_results = relationship("QuizResult", back_populates="quiz")
+    progresses = relationship("Progress", back_populates="quiz", cascade="all, delete-orphan")
+
+
 
 class Question(Base):
     __tablename__ = "questions"

@@ -16,3 +16,4 @@ class Course(Base):
     teacher = relationship("User", back_populates="courses")
     enrollments = relationship("Enrollment", back_populates="course", cascade="all, delete-orphan")
     chapters = relationship("Chapter", back_populates="course", cascade="all, delete")
+    progresses = relationship("Progress", back_populates="course", cascade="all, delete-orphan")

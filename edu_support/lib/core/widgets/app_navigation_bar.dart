@@ -53,12 +53,7 @@ class _AppNavigationBarState extends State<AppNavigationBar>
                   curve: Curves.easeInOut,
                   padding:
                       const EdgeInsets.symmetric(horizontal: 6, vertical: 6),
-                  decoration: BoxDecoration(
-                    color: isSelected
-                        ? activeColor.withOpacity(0.1)
-                        : Colors.transparent,
-                    borderRadius: BorderRadius.circular(20),
-                  ),
+                
                   child: Center(
                     child: AnimatedSwitcher(
                       duration: widget.animationDuration,
@@ -87,7 +82,7 @@ class _AppNavigationBarState extends State<AppNavigationBar>
                                 Icon(
                                   item.icon,
                                   color: activeColor,
-                                  size: 22,
+                                  size: 20,
                                 ),
                                 const SizedBox(width: 2),
                                 Text(

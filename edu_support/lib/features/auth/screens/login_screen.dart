@@ -31,10 +31,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   final email = _emailController.text.trim();
   final password = _passwordController.text.trim();
 
-  // 🟡 Thông báo đang đăng nhập
-  ScaffoldMessenger.of(context).showSnackBar(
-    const SnackBar(content: Text("Đang đăng nhập...")),
-  );
 
   try {
     await ref.read(authControllerProvider.notifier).login(email, password);
@@ -44,11 +40,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       final data = state.value;
       final role = data?['data']?['user']?['role'] ?? widget.role;
 
-      ScaffoldMessenger.of(context).hideCurrentSnackBar();
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Đăng nhập thành công!"), backgroundColor: Colors.green,),
       );
-
+      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+      await Future.delayed(const Duration(seconds: 2, milliseconds: 500));
+      ScaffoldMessenger.of(context).hideCurrentSnackBar();
       if (role == 'student') {
         Navigator.pushReplacementNamed(context, AppRoutes.studentMain);
       } else if (role == 'parent') {
@@ -62,8 +59,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            "Đăng nhập thất bại: ${state.error.toString()}",
+            state.error.toString(),
             style: const TextStyle(color: Colors.white),
+            
           ),
           backgroundColor: Colors.red,
         ),
